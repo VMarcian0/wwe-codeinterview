@@ -1,1 +1,3 @@
-{}
+{
+    "postgres": "postgres://postgres:vTpbcHcb@localhost:5432/wwe-test-tests"
+}

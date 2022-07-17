@@ -1,9 +1,20 @@
 import * as feathersAuthentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
+import { HookContext } from '@feathersjs/feathers';
+import app from '../../app';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
+
+const createUserWallet = async (context:HookContext) => {
+  const payload = {
+    userId: context?.result?.id
+  };
+  await app.services.wallets.create(payload);
+  return context;
+};
+
 
 export default {
   before: {
@@ -24,7 +35,7 @@ export default {
     ],
     find: [],
     get: [],
-    create: [],
+    create: [createUserWallet],
     update: [],
     patch: [],
     remove: []

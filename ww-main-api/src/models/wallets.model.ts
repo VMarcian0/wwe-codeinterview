@@ -6,41 +6,32 @@ import { HookReturn } from 'sequelize/types/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const users = sequelizeClient.define('users', {
-    id:{
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      unique: true,
-      autoIncrement: true,
-      primaryKey: true
-    },
-
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    password: {
-      type: DataTypes.STRING,
+  const wallets = sequelizeClient.define('wallets', {
+    hard_currency: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-  
-  
+    soft_currency: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {
         options.raw = true;
       }
     },
-    timestamps:true
+    timestamps: true
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (users as any).associate = function (models: any): void {
+  (wallets as any).associate = function (models: any): void {
     // Define associations here
     // See https://sequelize.org/master/manual/assocs.html
-    users.hasOne(models.wallets);
+    wallets.belongsTo(models.users, {
+      foreignKeyConstraint: true
+    });
   };
 
-  return users;
+  return wallets;
 }
