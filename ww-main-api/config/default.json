@@ -28,5 +28,5 @@
       "passwordField": "password"
     }
   },
-  "postgres": "postgres://postgres:vTpbcHcb@localhost:5432/wwe-test"
+  "postgres": "postgres://postgres:vTpbcHcb@localhost:5432/postgres"
 }
