@@ -1,13 +1,22 @@
-import { HookContext, HooksObject } from '@feathersjs/feathers';
+import { HookContext } from '@feathersjs/feathers';
 import * as authentication from '@feathersjs/authentication';
 import { getUserFromToken } from '../../hooks/getUserFromToken.hook';
-import { Forbidden, Unprocessable } from '@feathersjs/errors';
+import { Forbidden, NotFound, Unprocessable } from '@feathersjs/errors';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 import { disallow } from 'feathers-hooks-common';
+import { verifyEnum } from '../../util/verifyEnum.util';
+import app from '../../app';
+import { WalletType } from '../../types/wallet.type';
+import { AddCurrencyPayload, AddCurrencyPayloadCurrencyTypeKeys, AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.type';
 
 const verifyAllowedUser = async (context:HookContext) => {
+  /**
+   * Verify if it is an internal system call
+   */
+  if(!context?.params?.provider) {return context;}
+
   const user = await getUserFromToken(context);
   /**
    * I'am assuming that the sysadmin would be the user with the id = 1
@@ -15,83 +24,118 @@ const verifyAllowedUser = async (context:HookContext) => {
    * or implementing roles on the users, but for simplicity I'll leave this way
    */
   if(user?.id != 1) {
-    throw new Forbidden("Only the sysadmin can use this route")
+    throw new Forbidden('Only the sysadmin can use this route');
   }
 
   return context;
-}
+};
 
 
 
 const addCurrency = async (context:HookContext) => {
   
   if(!context?.data) {
-    return context
+    return context;
   }
   
-  const payload : AddCurrencyPayload = verifyPayload(context.data as AddCurrencyPayload);
+  const payload = verifyPayloadFieldsAndNormalizeValue(context.data as AddCurrencyPayload);
 
-  interface AddCurrencyPayload {
-    method: method_keys,
-    currency_type: currency_type_keys,
-    value: number,
-    user_id: number,
-    wallet_id: number
+  const wallet = await verifyUserIdAndRetriveWallet(payload);
+  
+  if (!validateValue(payload, wallet)){
+    throw new Unprocessable('Wallet has insuficient funds',{wallet:wallet});
   }
 
-  enum method_keys{
-    ADD = 'add',
-    REMOVE = 'remove'
-  }
+  const result = await patchWallet(wallet,payload);
 
-  enum currency_type_keys{
-    SOFT = 'soft',
-    HARD = 'hard'
-  }
+  context.result = result;
 
-  function verifyPayload(payload:AddCurrencyPayload) {
+  context.statusCode = 200;
+
+  return context;
+  
+  function verifyPayloadFieldsAndNormalizeValue(payload:AddCurrencyPayload) {
     if (!payload?.currency_type) {
-      throw new Unprocessable("Missing currency_type field");
+      throw new Unprocessable('Missing currency_type field');
     }
-
-    verifyEnum(currency_type_keys, 'currency_type', payload.method)
-
+    
+    verifyEnum(AddCurrencyPayloadCurrencyTypeKeys, 'currency_type', payload.currency_type);
+    
     if (!payload?.method) {
-      throw new Unprocessable("Missing method field");
+      throw new Unprocessable('Missing method field');
     }
 
-    verifyEnum(method_keys, 'method', payload.method)
+    verifyEnum(AddCurrencyPayloadMethodKeys, 'method', payload.method);
 
-    if (!payload?.user_id) {
-      throw new Unprocessable("Missing user_id field");
+    if (!payload?.userId) {
+      throw new Unprocessable('Missing userId field');
     }
-
-    if (!payload?.wallet_id) {
-      throw new Unprocessable("Missing wallet_id field");
-    }
-
+    
     if (!payload?.value) {
-      throw new Unprocessable("Missing value field");
+      throw new Unprocessable('Missing value field');
     }
     if (payload.value == 0){
-      throw new Unprocessable("Invalid Value");
+      throw new Unprocessable('Invalid Value');
     }
     payload.value = Math.floor(Math.abs(payload.value));
     return payload;
   }
   
-  const verifyEnum = ( enumerator : any, field_name:string, value:any): boolean => {
-    if (!Object.values(enumerator).includes(value)) {
-      throw new Unprocessable(
-        `${field_name} not expected`,
-        {
-          expected: Object.values(enumerator)
-        }
-      )
+  async function  verifyUserIdAndRetriveWallet (payload:AddCurrencyPayload) {
+    await app.services.users.get(payload.userId,{query:{$select:['id']}});
+    
+    const waletsFound = await app.services.wallets._find({query:{userId:payload.userId, $limit:1}, paginate:false}) as WalletType[];
+    if(waletsFound.length == 0 ){
+      throw new NotFound('Wallet for given user not found',{userId:payload.userId});
     }
-    return true
+    return waletsFound[0];
   }
-}
+
+  function validateValue(payload:AddCurrencyPayload, wallet:WalletType){
+    if(payload.method == AddCurrencyPayloadMethodKeys.REMOVE){
+      if (payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.HARD){
+        if (wallet.hard_currency - payload.value < 0){
+          return false;
+        }
+      }
+      if (payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.SOFT){
+        if (wallet.soft_currency - payload.value < 0){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  async function  patchWallet(wallet: WalletType, payload: AddCurrencyPayload) {
+    if(!wallet?.id) {
+      //this is not reachble
+      throw new Unprocessable();
+    }
+    const updatedValue = buildUpdatedValue(wallet,payload);
+    return await app.services.wallets._patch(wallet.id, updatedValue) as WalletType;
+  }
+
+  function buildUpdatedValue(wallet: WalletType, payload: AddCurrencyPayload): Partial<WalletType>{
+    if (payload.method == AddCurrencyPayloadMethodKeys.ADD){
+      if(payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.HARD){
+        return {hard_currency: wallet.hard_currency + payload.value};
+      }
+      if(payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.SOFT){
+        return {soft_currency: wallet.soft_currency + payload.value};
+      }
+    }
+    if (payload.method == AddCurrencyPayloadMethodKeys.REMOVE){
+      if(payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.HARD){
+        return {hard_currency: +(wallet.hard_currency - payload.value).toFixed(0)};
+      }
+      if(payload.currency_type == AddCurrencyPayloadCurrencyTypeKeys.SOFT){
+        return {soft_currency: +(wallet.soft_currency - payload.value).toFixed(0)};
+      }
+    }
+    return {};
+  }
+};
 
 
 export default {
@@ -99,12 +143,12 @@ export default {
     all: [ authenticate('jwt'), verifyAllowedUser ],
     find: [disallow()],
     get: [disallow()],
-    create: [],
+    create: [addCurrency],
     update: [disallow()],
     patch: [disallow()],
     remove: [disallow()]
   },
-
+  
   after: {
     all: [],
     find: [],
@@ -125,3 +169,4 @@ export default {
     remove: []
   }
 };
+

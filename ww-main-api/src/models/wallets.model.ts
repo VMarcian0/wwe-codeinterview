@@ -28,9 +28,7 @@ export default function (app: Application): typeof Model {
   (wallets as any).associate = function (models: any): void {
     // Define associations here
     // See https://sequelize.org/master/manual/assocs.html
-    wallets.belongsTo(models.users, {
-      foreignKeyConstraint: true
-    });
+    wallets.belongsTo(models.users);
   };
 
   return wallets;
