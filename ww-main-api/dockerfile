@@ -1,21 +1,17 @@
-# ASSUMING THAT WE ALREADY HAVE A DOCKER CONTAINER WITH POSTGRES
 # STAGE 1
 FROM node:lts-fermium
 WORKDIR /usr/src/app
 COPY package*.json ./ 
 
-# Install all the stuff 
+# Install
 RUN npm install 
 
 # Install typescript 
 RUN npm install -g typescript 
+
 COPY . . 
 
-
-# STAGE 2 : COMPILE
-CMD ["npm", "run", "compile"] 
-
-# WAIT
+# STAGE 2 : WAIT POSTGRESS
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
 
