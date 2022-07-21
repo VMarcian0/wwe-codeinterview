@@ -5,26 +5,13 @@ import { Sequelize } from 'sequelize';
 import app from '../../app';
 import { MakeTransaction } from '../../hooks/genericTransaction.hook';
 import { getUserFromToken } from '../../hooks/getUserFromToken.hook';
-import { AddCurrencyPayload, AddCurrencyPayloadCurrencyTypeKeys, AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.type';
+import { AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.type';
 import { ClubPostPayladType, ClubPostPayladTypeMethodKeys } from '../../types/club.payload.type';
 import { UserType } from '../../types/user.type';
 import { verifyEnum } from '../../util/verifyEnum.util';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
-
-/* interface ClubPostPayload{
-  method: ClubPostPayloadMethodKeys,
-  //JOIN
-  clubId?: number,
-  //Create
-  name?: string
-}
-
-enum ClubPostPayloadMethodKeys{
-  CREATE = 'create',
-  JOIN = 'join'
-} */
 
 const associate = async (context:HookContext) => {
   const sequelizeClient = app.get('sequelizeClient') as Sequelize;
