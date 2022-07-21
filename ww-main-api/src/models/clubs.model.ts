@@ -6,42 +6,26 @@ import { HookReturn } from 'sequelize/types/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const users = sequelizeClient.define('users', {
-    id:{
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      unique: true,
-      autoIncrement: true,
-      primaryKey: true
-    },
-
-    email: {
+  const clubs = sequelizeClient.define('clubs', {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-  
-  
+    }
   }, {
     hooks: {
       beforeCount(options: any): HookReturn {
         options.raw = true;
       }
-    },
-    timestamps:true
+    }
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (users as any).associate = function (models: any): void {
+  (clubs as any).associate = function (models: any): void {
     // Define associations here
     // See https://sequelize.org/master/manual/assocs.html
-    users.hasOne(models.wallets);
-    users.belongsTo(models.clubs);
+    clubs.hasMany(models.users);
   };
-  
-  return users;
+
+  return clubs;
 }
