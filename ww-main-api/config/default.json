@@ -28,5 +28,15 @@
       "passwordField": "password"
     }
   },
-  "postgres": "postgres://postgres:vTpbcHcb@localhost:5432/postgres"
+  "postgres": "postgres://postgres:vTpbcHcb@localhost:5432/postgres",
+  "clubDefaultPrices":{
+    "create": {
+      "currency": "hard",
+      "value": 50
+    },
+    "join":{
+      "currency": "soft",
+      "value": 100
+    }
+  }
 }

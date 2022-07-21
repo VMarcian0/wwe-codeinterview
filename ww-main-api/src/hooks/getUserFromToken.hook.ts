@@ -1,5 +1,5 @@
 import { NotAuthenticated } from '@feathersjs/errors';
-import { HookContext } from '@feathersjs/feathers';
+import { HookContext, Query } from '@feathersjs/feathers';
 import jwt from 'jsonwebtoken';
 import app from '../app';
 import { UserType } from '../types/user.type';
@@ -10,7 +10,7 @@ import { UserType } from '../types/user.type';
  * @throws NotAuthenticated
  * @async
  */
-export const getUserFromToken = async ( context: HookContext ): Promise<UserType> => {
+export const getUserFromToken = async ( context: HookContext, query?:Query ): Promise<UserType> => {
   
   const token: string = context?.params?.headers?.authorization || context?.params?.authentication?.accessToken;
   if ( !token ) throw new NotAuthenticated('No authorization token has been found', {
@@ -28,7 +28,7 @@ export const getUserFromToken = async ( context: HookContext ): Promise<UserType
     decodedToken: decoded
   });
 
-  const user: UserType = await app.services.users._get( userId );
+  const user: UserType = await app.services.users._get( userId, {query: query ? query : {}});
   delete user?.password;
 
   return user;
