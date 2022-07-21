@@ -33,6 +33,31 @@ const associate = async (context:HookContext) => {
   return context;
 };
 
+const switchMethods = async (context:HookContext) => {
+  /**
+   * @TODO
+   * validate the method keys
+   * according the method validate the payload
+   * switch between methods
+   */
+}
+
+const canJoin = async (context:HookContext) => {
+  /**
+   * @TODO
+   * validate if the payload has the userId before enter here
+   * validate if the club has reached its maximum capacity
+   * make the payment
+   * fill the result with the givenclubId and the updateRelationHook should work
+   */
+  //* validate if the payload has the userId before enter here
+  //* validate if the club has reached its maximum capacity
+  //* make the payment
+  //! CLEAR context.data
+  //* fill the result with the givenclubId and the updateRelationHook should work
+}
+
+
 const canCreate = async (context:HookContext) => {
   //Get user making the request
   const currentUserId = (await getUserFromToken(context, {'$select':['_id']})).id as number;
