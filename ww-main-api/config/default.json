@@ -38,5 +38,6 @@
       "currency": "soft",
       "value": 100
     }
-  }
+  },
+  "clubMaximumCapacity": 50
 }

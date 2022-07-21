@@ -42,6 +42,6 @@ export default function (app: Application): typeof Model {
     users.hasOne(models.wallets);
     users.belongsTo(models.clubs);
   };
-  
+
   return users;
 }
