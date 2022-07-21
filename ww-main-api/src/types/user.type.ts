@@ -7,4 +7,5 @@ export interface UserType extends BasicDocumentType{
      * witch will hide the plaintext password from the document
      */
     password?:string,
+    clubId?: number
 }

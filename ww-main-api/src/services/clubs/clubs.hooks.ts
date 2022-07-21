@@ -84,17 +84,22 @@ const canJoin = async (context:HookContext) => {
    * queue all the joinings to a club (possibily on a second layer of memory)
    * and resolve one request at time on a separeted service i comonlly call "watchers"
    */
-  //* validate if the club has reached its maximum capacity
   const clubId = context.data.clubId as number;
+  //* Validate if the user isn´t already on the club
+  const currentUser = (await getUserFromToken(context)) as UserType;
+  if(currentUser.clubId == clubId) {
+    throw new Unprocessable('User already on this club');
+  }
+
+  //* validate if the club has reached its maximum capacity
   if((await countUsersOnAClub(clubId)) == app.get('clubMaximumCapacity')){
-    throw new Unprocessable("This club has reached its maximum capacity")
+    throw new Unprocessable("This club has reached its maximum capacity");
   }
 
   //* make the payment
-  const currentUserId = (await getUserFromToken(context, {'$select':['_id']})).id as number;
   //TODO : clubDefaultPrices should have a type
   const defaultPrice = app.get('clubDefaultPrices')
-  await MakeTransaction(defaultPrice.join.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUserId, defaultPrice.join.value)
+  await MakeTransaction(defaultPrice.join.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUser?.id as number, defaultPrice.join.value)
   
   //* fill the result with the givenclubId and the updateRelationHook should work
   const club = await app.services.clubs._get(clubId);
