@@ -7,9 +7,11 @@ As long I am used to mongodb with mongoose, to approach as requested, this test 
 This was my first experience using PostgresSQL and Sequelize.
 ### Initial database setup
 As I am using Sequelize there is no need to create SQL scripts for table creation. 
+
 Although it can be found on ```create_tables.sql```
 ### ER-Diagram
 ![er-diagram](/er-diagram.png "ER-Diagram")
+
 Both create_tables and er-diagram mande by DBeaver(https://dbeaver.com/)
 ## Docker
 To run this application on a docker container you just need to run: 
