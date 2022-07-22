@@ -1,0 +1,397 @@
+{
+	"info": {
+		"_postman_id": "f1e9d9ff-cf0a-46c4-b81a-3c5ae01e2aca",
+		"name": "wwe-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13859849"
+	},
+	"item": [
+		{
+			"name": "Create New User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"1234\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"strategy\":\"local\",\r\n    \"email\":\"testing@testing.com\",\r\n    \"password\":\"1234567890\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate User 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"strategy\":\"local\",\r\n    \"email\":\"wallet@testing.com\",\r\n    \"password\":\"1234567890\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate User 3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"strategy\":\"local\",\r\n    \"email\":\"addcurrency@testing.com\",\r\n    \"password\":\"1234567890\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate User 3 Copy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"strategy\": \"local\",\r\n  \"email\": \"message@testing.com\",\r\n  \"password\": \"1234567890\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create wallet (just for test puporse)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDYzNzEsImV4cCI6MTY1ODUzMjc3MSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMSIsImp0aSI6IjYxMWIwYjliLWUzYmQtNGJjNy1hYTcxLTdlODA5OTYzMjNkNiJ9.-fQ0Zj8KWQL0PLC72YgF2TJEz0Q-zW5wY5HIRbBI2wk",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3030/wallets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addCurrency",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDY1NzksImV4cCI6MTY1ODUzMjk3OSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMSIsImp0aSI6IjVkMWI5ODNiLTUyYWUtNDVmNi05OTdjLTk1MTgxOGQyZjk3YiJ9.-chHGng8Jgda0meMaS-k9GkALnTVUSrpSCwG_27Img4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"add\",\r\n    \"currency_type\": \"hard\",\r\n    \"value\": 869,\r\n    \"userId\": 1\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/wallets/add-currency",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"wallets",
+						"add-currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeCurrency",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTgyODg1MzksImV4cCI6MTY1ODM3NDkzOSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMSIsImp0aSI6IjU1NWViN2QyLTVhYmYtNGNjZi05ODZmLTA1Y2FjMjA5MTM3OSJ9.BLdubpRQPQDuQNv0S2i-wCzJbCehI-3Iyhr-wMHNxgA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"remove\",\r\n    \"currency_type\": \"soft\",\r\n    \"value\": 10,\r\n    \"userId\": 2\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/wallets/add-currency",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"wallets",
+						"add-currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create club",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDkzOTEsImV4cCI6MTY1ODUzNTc5MSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMyIsImp0aSI6ImI4OWYyZjdkLTgxODMtNGVmMy04MmVjLWJiZDM0YjYxNWY4YiJ9.KSeOncor_0mGv6nd38O6twgz-z3-cUfmZPryqmx0qn8",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"create\",\r\n    \"name\":\"ClubOne\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/clubs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"clubs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "join a club",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDY2NjEsImV4cCI6MTY1ODUzMzA2MSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMiIsImp0aSI6IjBmMWI4ZGI0LWU5ZWItNDhlMC1iYjQ2LTcyYTMyN2U3N2Y2YyJ9.ELR6CAdOZInzGfTMr7_B8_jayaJWoxr8quPBG5D6cmA",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"method\": \"join\",\r\n    \"clubId\": 1\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/clubs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"clubs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get/list club you´re associated to",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDY2NjEsImV4cCI6MTY1ODUzMzA2MSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMiIsImp0aSI6IjBmMWI4ZGI0LWU5ZWItNDhlMC1iYjQ2LTcyYTMyN2U3N2Y2YyJ9.ELR6CAdOZInzGfTMr7_B8_jayaJWoxr8quPBG5D6cmA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3030/clubs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"clubs"
+					],
+					"query": [
+						{
+							"key": "clubId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendMessage",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2NTg0NDkzOTEsImV4cCI6MTY1ODUzNTc5MSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiMyIsImp0aSI6ImI4OWYyZjdkLTgxODMtNGVmMy04MmVjLWJiZDM0YjYxNWY4YiJ9.KSeOncor_0mGv6nd38O6twgz-z3-cUfmZPryqmx0qn8",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"Hello world !\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3030/message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"message"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
