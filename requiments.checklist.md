@@ -2,7 +2,7 @@
 
 ## Part 1 - User 
 Create a service that exposes the following functionalities: 
-* User creation and authentication (a simple UUID string is sufficient) 
+* User creation and authentication (a simple UUID string is sufficient) :ballot_box_with_check:
 * Every user has a wallet with two currencies: hard_currency & soft_currencies :ballot_box_with_check:
 * Every time a new user is created, its wallet is initialized with the following parameters: :ballot_box_with_check:
     * hard_currency: random number from 5 to 100
@@ -19,12 +19,12 @@ The actions available to the users are the following:
 * SendMessage: the user can send a message to its club :ballot_box_with_check:
 * GetClubMessages: it returns the list of messages shared in the club :ballot_box_with_check:
 
-## Part 3 - Club donations
+## Part 3 - Club donations :construction:
 
-We want to implement a Donation feature for the Club system, with the following functionalities: 
-Any club member can issue a donation request to its club: donation is an exchange of soft_currency between members of the same club.
-Any club member can donate their soft_currency to a specific donation request
-When a donation request is fulfilled the soft_currency is transferred to the request issuer
+We want to implement a Donation feature for the Club system, with the following functionalities:  
+* Any club member can issue a donation request to its club: donation is an exchange of soft_currency between members of the same club.
+* Any club member can donate their soft_currency to a specific donation request
+* When a donation request is fulfilled the soft_currency is transferred to the request issuer
 
 Think about the feature and create your own design for it. Write down all assumption made during the design process and develop the necessary API endpoints.
 
