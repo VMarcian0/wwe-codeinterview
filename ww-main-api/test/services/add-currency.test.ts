@@ -16,9 +16,9 @@ describe('\'addCurrency\' service', () => {
       password:'1234567890'
     };
 
-    const recievedUser = await app.services.users.create(givenUser) as UserType;
+    const receivedUser = await app.services.users.create(givenUser) as UserType;
 
-    const userWallet = await app.services.wallets.find({query:{userId:recievedUser?.id as number},paginate:false}) as WalletType[];
+    const userWallet = await app.services.wallets.find({query:{userId:receivedUser?.id as number},paginate:false}) as WalletType[];
   
     const wallet = userWallet[0];
     assert.ok(wallet, 'Wallet needs to have an id');
@@ -29,7 +29,7 @@ describe('\'addCurrency\' service', () => {
     const updateSoftWalletPayload : AddCurrencyPayload = {
       currency_type: AddCurrencyPayloadCurrencyTypeKeys.SOFT,
       method: AddCurrencyPayloadMethodKeys.ADD,
-      userId: recievedUser?.id as number,
+      userId: receivedUser?.id as number,
       value: 10
     };
 

@@ -11,16 +11,14 @@ describe('authentication', () => {
       email: 'someone@example.com',
       password: 'supersecret'
     };
-
-    before(async () => {
+    
+    it('authenticates user and creates accessToken', async () => {
       try {
-        await app.service('users').create(userInfo);
+        const result = await app.service('users').create(userInfo);
+        assert.ok(result?.id, 'It created the user');
       } catch (error) {
         // Do nothing, it just means the user already exists and can be tested
       }
-    });
-
-    it('authenticates user and creates accessToken', async () => {
       const { user, accessToken } = await app.service('authentication').create({
         strategy: 'local',
         ...userInfo

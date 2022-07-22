@@ -6,7 +6,7 @@ import app from '../../app';
 import { MakeTransaction } from '../../hooks/genericTransaction.hook';
 import { getUserFromToken } from '../../hooks/getUserFromToken.hook';
 import { AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.type';
-import { ClubPostPayladType, ClubPostPayladTypeMethodKeys } from '../../types/club.payload.type';
+import { ClubPostPayloadType, ClubPostPayloadTypeMethodKeys } from '../../types/club.payload.type';
 import { UserType } from '../../types/user.type';
 import { verifyEnum } from '../../util/verifyEnum.util';
 import { disallow } from 'feathers-hooks-common';
@@ -32,22 +32,22 @@ const switchMethods = async (context:HookContext) => {
    * switch between methods
    */
   if (!context?.data) {return context;}
-  const payload = context.data as ClubPostPayladType;
+  const payload = context.data as ClubPostPayloadType;
 
-  verifyEnum(ClubPostPayladTypeMethodKeys,'method',payload.method);
+  verifyEnum(ClubPostPayloadTypeMethodKeys,'method',payload.method);
 
   switch (payload.method) {
-  case ClubPostPayladTypeMethodKeys.CREATE:
+  case ClubPostPayloadTypeMethodKeys.CREATE:
     context = await canCreate(context);
     break;
-  case ClubPostPayladTypeMethodKeys.JOIN:
+  case ClubPostPayloadTypeMethodKeys.JOIN:
     if (!payload.clubId) {
       throw new Unprocessable('Missing clubId to join',{required:'clubId field'});
     }
     context = await canJoin(context);
     break;
   default:
-    throw new Unprocessable('Methos out of bounds',{method:payload.method});
+    throw new Unprocessable('Method out of bounds',{method:payload.method});
     break;
   }
   return context;
@@ -63,33 +63,31 @@ const canCreate = async (context:HookContext) => {
   return context;
 };
 
-
+/**
+ * @todo A better concurrency solution
+ * @description
+ * The correct way to handle the joining of users into a club would be to
+ * queue all the joinings to a club (possibly a collection with TTL)
+ * and resolve one request at time on a separated service
+ * or even a subroutine that only runs on the main node of the application,
+ * I commonly call those subroutine "watchers"
+ */
 const canJoin = async (context:HookContext) => {
-  /**
-   * @todo A better concurrncy solution
-   * @description
-   * The correct way to handle the joining of users in a club would be to
-   * queue all the joinings to a club (possibily on a second layer of memory)
-   * and resolve one request at time on a separeted service i comonlly call "watchers"
-   */
   const clubId = context.data.clubId as number;
-  //* Validate if the user isn´t already on the club
   const currentUser = (await getUserFromToken(context)) as UserType;
+
   if(currentUser.clubId == clubId) {
     throw new Unprocessable('User already on this club');
   }
 
-  //* validate if the club has reached its maximum capacity
   if((await countUsersOnAClub(clubId)) == app.get('clubMaximumCapacity')){
     throw new Unprocessable('This club has reached its maximum capacity');
   }
 
-  //* make the payment
   //TODO : clubDefaultPrices should have a type
   const defaultPrice = app.get('clubDefaultPrices');
   await MakeTransaction(defaultPrice.join.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUser?.id as number, defaultPrice.join.value);
   
-  //* fill the result with the givenclubId and the updateRelationHook should work
   const club = await app.services.clubs._get(clubId);
   context.result = {...club};
   context.statusCode = 201;

@@ -1,5 +1,5 @@
 # STAGE 1
-FROM node:lts-fermium
+FROM node:lts
 WORKDIR /usr/src/app
 COPY package*.json ./ 
 
@@ -17,6 +17,9 @@ RUN chmod +x /wait
 
 # Expose the port
 EXPOSE 3030
+
+# Run tests in order to fill the database
+CMD ["npm", "test"]
 
 # STAGE 3 : RUN 
 CMD ["npm", "start"]

@@ -1,10 +1,10 @@
-export interface ClubPostPayladType{
-    method: ClubPostPayladTypeMethodKeys,
+export interface ClubPostPayloadType{
+    method: ClubPostPayloadTypeMethodKeys,
     clubId?: number,
     name?: string
 }
 
-export enum ClubPostPayladTypeMethodKeys{
+export enum ClubPostPayloadTypeMethodKeys{
     CREATE = 'create',
     JOIN = 'join'
 }

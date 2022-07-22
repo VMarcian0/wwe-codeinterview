@@ -19,9 +19,9 @@ const verifyAllowedUser = async (context:HookContext) => {
 
   const user = await getUserFromToken(context);
   /**
-   * I'am assuming that the sysadmin would be the user with the id = 1
-   * There are beter ways of doing this with a api-key authentication for instance
-   * or implementing roles on the users, but for simplicity I'll leave this way
+   * I am assuming that the sysadmin would be the user with the id = 1
+   * There are better ways of doing this with a api-key authentication for instance
+   * or implementing roles on the users, but for simplicity sake I'll leave this way
    */
   if(user?.id != 1) {
     throw new Forbidden('Only the sysadmin can use this route');
@@ -40,10 +40,10 @@ const addCurrency = async (context:HookContext) => {
   
   const payload = verifyPayloadFieldsAndNormalizeValue(context.data as AddCurrencyPayload);
 
-  const wallet = await verifyUserIdAndRetriveWallet(payload);
+  const wallet = await verifyUserIdAndRetrieveWallet(payload);
   
   if (!validateValue(payload, wallet)){
-    throw new Unprocessable('Wallet has insuficient funds',{wallet:wallet, cost:{currency:payload.currency_type, value:payload.value}});
+    throw new Unprocessable('Wallet has insufficient funds',{wallet:wallet, cost:{currency:payload.currency_type, value:payload.value}});
   }
 
   const result = await patchWallet(wallet,payload);
@@ -81,14 +81,14 @@ const addCurrency = async (context:HookContext) => {
     return payload;
   }
   
-  async function  verifyUserIdAndRetriveWallet (payload:AddCurrencyPayload) {
+  async function  verifyUserIdAndRetrieveWallet (payload:AddCurrencyPayload) {
     await app.services.users.get(payload.userId,{query:{$select:['id']}});
     
-    const waletsFound = await app.services.wallets._find({query:{userId:payload.userId, $limit:1}, paginate:false}) as WalletType[];
-    if(waletsFound.length == 0 ){
+    const walletsFound = await app.services.wallets._find({query:{userId:payload.userId, $limit:1}, paginate:false}) as WalletType[];
+    if(walletsFound.length == 0 ){
       throw new NotFound('Wallet for given user not found',{userId:payload.userId});
     }
-    return waletsFound[0];
+    return walletsFound[0];
   }
 
   function validateValue(payload:AddCurrencyPayload, wallet:WalletType){
@@ -109,7 +109,7 @@ const addCurrency = async (context:HookContext) => {
 
   async function  patchWallet(wallet: WalletType, payload: AddCurrencyPayload) {
     if(!wallet?.id) {
-      //this is not reachble
+      //this is not reachable
       throw new Unprocessable();
     }
     const updatedValue = buildUpdatedValue(wallet,payload);

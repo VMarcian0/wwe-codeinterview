@@ -15,10 +15,10 @@ describe('\'users\' service', () => {
       password:'1234567890'
     };
 
-    const recievedUser = await app.services.users.create(givenUser) as UserType;
+    const receivedUser = await app.services.users.create(givenUser) as UserType;
 
-    assert.ok(recievedUser?.id, 'User has an id');
-    assert.equal(recievedUser.email, givenUser.email, 'User email is kept');
+    assert.ok(receivedUser?.id, 'User has an id');
+    assert.equal(receivedUser.email, givenUser.email, 'User email is kept');
   });
   it('creates a wallet after creating a user', async() => {
     const givenUser : UserType = {
@@ -26,12 +26,12 @@ describe('\'users\' service', () => {
       password:'1234567890'
     };
 
-    const recievedUser = await app.services.users.create(givenUser) as UserType;
+    const receivedUser = await app.services.users.create(givenUser) as UserType;
 
-    assert.ok(recievedUser?.id, 'User has an id');
-    assert.equal(recievedUser.email, givenUser.email, 'User email is kept');
+    assert.ok(receivedUser?.id, 'User has an id');
+    assert.equal(receivedUser.email, givenUser.email, 'User email is kept');
 
-    const userWallet = await app.services.wallets.find({query:{userId:recievedUser?.id as number},paginate:false}) as WalletType[];
+    const userWallet = await app.services.wallets.find({query:{userId:receivedUser?.id as number},paginate:false}) as WalletType[];
 
 
     assert.equal(userWallet.length, 1, 'Only one wallet by user');

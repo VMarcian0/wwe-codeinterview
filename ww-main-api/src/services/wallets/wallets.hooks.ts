@@ -8,20 +8,20 @@ import { disallow } from 'feathers-hooks-common';
 
 const { authenticate } = authentication.hooks;
 /**
- * Fill the userId field in other to make the correct association
+ * Fill the userId field in order to make the correct association
  * @param context 
  * @returns 
  */
 const associateUser = async (context:HookContext) => {
   /**
-   * This if in here checks if it is an internal call from within the application
+   * This "if" in here checks if it is an internal call from within the application
    */
   if(!context?.params?.provider){
     return context;
   }
   else{
     /**
-     * If it is an external call i retrieve the user information on the token
+     * If it is an external call the application retrieve the user information on the token
      */
     const user = await getUserFromToken(context);
     
@@ -48,15 +48,15 @@ const ensureOnlyOneWalletForUser = async (context:HookContext) => {
   return context;
 };
 
-const generateRandomIntWitihinInterval = (min:number,max:number):number =>{
+const generateRandomIntWithinInterval = (min:number,max:number):number =>{
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor((Math.random() * (max - min)) + min);
 };
 
 const initializeValues = async (context:HookContext) => {
-  context.data.hard_currency = generateRandomIntWitihinInterval(5, 100);
-  context.data.soft_currency = generateRandomIntWitihinInterval(10, 1000);
+  context.data.hard_currency = generateRandomIntWithinInterval(5, 100);
+  context.data.soft_currency = generateRandomIntWithinInterval(10, 1000);
   return context;
 };
 
