@@ -41,6 +41,7 @@ export default function (app: Application): typeof Model {
     // See https://sequelize.org/master/manual/assocs.html
     users.hasOne(models.wallets);
     users.belongsTo(models.clubs);
+    users.hasMany(models.message);
   };
 
   return users;

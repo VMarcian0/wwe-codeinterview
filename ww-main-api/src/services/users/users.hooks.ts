@@ -2,6 +2,7 @@ import * as feathersAuthentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
 import { HookContext } from '@feathersjs/feathers';
 import app from '../../app';
+import { disallow } from 'feathers-hooks-common';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = feathersAuthentication.hooks;
@@ -22,9 +23,9 @@ export default {
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
     create: [ hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
+    update: [ hashPassword('password'),  authenticate('jwt'), disallow() ],
     patch: [ hashPassword('password'),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    remove: [ disallow() ]
   },
 
   after: {

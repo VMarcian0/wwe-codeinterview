@@ -9,6 +9,7 @@ import { AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.t
 import { ClubPostPayladType, ClubPostPayladTypeMethodKeys } from '../../types/club.payload.type';
 import { UserType } from '../../types/user.type';
 import { verifyEnum } from '../../util/verifyEnum.util';
+import { disallow } from 'feathers-hooks-common';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -36,29 +37,29 @@ const switchMethods = async (context:HookContext) => {
   verifyEnum(ClubPostPayladTypeMethodKeys,'method',payload.method);
 
   switch (payload.method) {
-    case ClubPostPayladTypeMethodKeys.CREATE:
-      context = await canCreate(context);
-      break;
-    case ClubPostPayladTypeMethodKeys.JOIN:
-      if (!payload.clubId) {
-        throw new Unprocessable("Missing clubId to join",{required:'clubId field'})
-      }
-      context = await canJoin(context);
-      break;
-    default:
-      throw new Unprocessable('Methos out of bounds',{method:payload.method});
-      break;
+  case ClubPostPayladTypeMethodKeys.CREATE:
+    context = await canCreate(context);
+    break;
+  case ClubPostPayladTypeMethodKeys.JOIN:
+    if (!payload.clubId) {
+      throw new Unprocessable('Missing clubId to join',{required:'clubId field'});
+    }
+    context = await canJoin(context);
+    break;
+  default:
+    throw new Unprocessable('Methos out of bounds',{method:payload.method});
+    break;
   }
-  return context
-}
+  return context;
+};
 
 const canCreate = async (context:HookContext) => {
   //Get user making the request
   const currentUserId = (await getUserFromToken(context, {'$select':['_id']})).id as number;
   //Make him pay the price of creating a club
   //TODO : clubDefaultPrices should have a type
-  const defaultPrice = app.get('clubDefaultPrices')
-  await MakeTransaction(defaultPrice.create.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUserId, defaultPrice.create.value)
+  const defaultPrice = app.get('clubDefaultPrices');
+  await MakeTransaction(defaultPrice.create.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUserId, defaultPrice.create.value);
   return context;
 };
 
@@ -80,13 +81,13 @@ const canJoin = async (context:HookContext) => {
 
   //* validate if the club has reached its maximum capacity
   if((await countUsersOnAClub(clubId)) == app.get('clubMaximumCapacity')){
-    throw new Unprocessable("This club has reached its maximum capacity");
+    throw new Unprocessable('This club has reached its maximum capacity');
   }
 
   //* make the payment
   //TODO : clubDefaultPrices should have a type
-  const defaultPrice = app.get('clubDefaultPrices')
-  await MakeTransaction(defaultPrice.join.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUser?.id as number, defaultPrice.join.value)
+  const defaultPrice = app.get('clubDefaultPrices');
+  await MakeTransaction(defaultPrice.join.currency, AddCurrencyPayloadMethodKeys.REMOVE, currentUser?.id as number, defaultPrice.join.value);
   
   //* fill the result with the givenclubId and the updateRelationHook should work
   const club = await app.services.clubs._get(clubId);
@@ -96,7 +97,7 @@ const canJoin = async (context:HookContext) => {
   delete context?.data;
 
   return context;
-}
+};
 
 
 const countUsersOnAClub = async (clubId:number) : Promise<number> => {
@@ -104,9 +105,9 @@ const countUsersOnAClub = async (clubId:number) : Promise<number> => {
     clubId,
     $select:['id'],
     $limit: 0
-  }
+  };
   return (await app.services.users._find({query}) as Paginated<UserType>).total;
-}
+};
 
 
 
@@ -117,15 +118,29 @@ const updateUserRelation = async (context:HookContext) => {
   await app.services.users._patch(currentUserId,{'clubId':context.result.id});
 };
 
+const filter = async (context:HookContext) =>{
+  const user = await getUserFromToken(context);
+
+  if(!user?.clubId){
+    throw new Unprocessable('You need to join  club in order to see it');
+  }
+
+  if (context?.id != user.clubId){
+    context.id = user.clubId;
+  }
+  context.id = user.clubId;
+  return;
+};
+
 export default {
   before: {
     all: [ authenticate('jwt') ],
-    find: [associate],
-    get: [associate],
+    find: [associate,filter],
+    get: [associate,filter],
     create: [switchMethods],
-    update: [],
-    patch: [],
-    remove: []
+    update: [disallow()],
+    patch: [disallow()],
+    remove: [disallow()]
   },
 
   after: {

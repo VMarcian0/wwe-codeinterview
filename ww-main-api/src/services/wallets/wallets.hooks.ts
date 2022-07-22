@@ -3,6 +3,7 @@ import * as authentication from '@feathersjs/authentication';
 import { getUserFromToken } from '../../hooks/getUserFromToken.hook';
 import { Unprocessable } from '@feathersjs/errors';
 import app from '../../app';
+import { disallow } from 'feathers-hooks-common';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -66,9 +67,9 @@ export default {
     find: [],
     get: [],
     create: [associateUser, ensureOnlyOneWalletForUser, initializeValues],
-    update: [],
-    patch: [],
-    remove: []
+    update: [disallow()],
+    patch: [disallow()],
+    remove: [disallow()]
   },
 
   after: {

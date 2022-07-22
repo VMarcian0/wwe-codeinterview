@@ -1,6 +1,6 @@
-import app from "../app"
-import { AddCurrencyPayload, AddCurrencyPayloadCurrencyTypeKeys, AddCurrencyPayloadMethodKeys } from "../types/add.currency.payload.type"
-import { WalletType } from "../types/wallet.type"
+import app from '../app';
+import { AddCurrencyPayload, AddCurrencyPayloadCurrencyTypeKeys, AddCurrencyPayloadMethodKeys } from '../types/add.currency.payload.type';
+import { WalletType } from '../types/wallet.type';
 /**
  * Makes the desired transaction
  * @param currency 
@@ -9,11 +9,11 @@ import { WalletType } from "../types/wallet.type"
  * @param value 
  */
 export const MakeTransaction = async (currency_type:AddCurrencyPayloadCurrencyTypeKeys, method:AddCurrencyPayloadMethodKeys, userId:number, value:number) => {
-    const payload : AddCurrencyPayload = {
-        userId,
-        currency_type,
-        method,
-        value
-    }
-    return await app.services["wallets/add-currency"].create(payload) as WalletType;
-} 
+  const payload : AddCurrencyPayload = {
+    userId,
+    currency_type,
+    method,
+    value
+  };
+  return await app.services['wallets/add-currency'].create(payload) as WalletType;
+}; 

@@ -3,6 +3,7 @@ import users from './users/users.service';
 import wallets from './wallets/wallets.service';
 import addCurrency from './add-currency/add-currency.service';
 import clubs from './clubs/clubs.service';
+import message from './message/message.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -10,4 +11,5 @@ export default function (app: Application): void {
   app.configure(wallets);
   app.configure(addCurrency);
   app.configure(clubs);
+  app.configure(message);
 }

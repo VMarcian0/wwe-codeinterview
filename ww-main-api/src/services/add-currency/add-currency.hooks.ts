@@ -2,14 +2,14 @@ import { HookContext } from '@feathersjs/feathers';
 import * as authentication from '@feathersjs/authentication';
 import { getUserFromToken } from '../../hooks/getUserFromToken.hook';
 import { Forbidden, NotFound, Unprocessable } from '@feathersjs/errors';
-// Don't remove this comment. It's needed to format import lines nicely.
-
 const { authenticate } = authentication.hooks;
 import { disallow } from 'feathers-hooks-common';
 import { verifyEnum } from '../../util/verifyEnum.util';
 import app from '../../app';
 import { WalletType } from '../../types/wallet.type';
 import { AddCurrencyPayload, AddCurrencyPayloadCurrencyTypeKeys, AddCurrencyPayloadMethodKeys } from '../../types/add.currency.payload.type';
+// Don't remove this comment. It's needed to format import lines nicely.
+
 
 const verifyAllowedUser = async (context:HookContext) => {
   /**
@@ -43,7 +43,7 @@ const addCurrency = async (context:HookContext) => {
   const wallet = await verifyUserIdAndRetriveWallet(payload);
   
   if (!validateValue(payload, wallet)){
-    throw new Unprocessable('Wallet has insuficient funds',{wallet:wallet});
+    throw new Unprocessable('Wallet has insuficient funds',{wallet:wallet, cost:{currency:payload.currency_type, value:payload.value}});
   }
 
   const result = await patchWallet(wallet,payload);
