@@ -49,6 +49,8 @@ I´ve assumed that a users could only see the club information and it's messages
 ### Final considerations
 The fact of exposing the users hashed password on a club call or a message call is not a nice thing, as I stated before, this was my first time using Sequelize and the feathers common hooks to protect the information didn't worked well.
 
+There is a postman collection that i used to test and develop the application on the [wwe-test.postman_collection.json](/assets/wwe-test.postman_collection.json)
+
 The time I spent making this project was recorded with [TopTracker](https://www.toptal.com/tracker/) and can be found in [time_spent.csv](/assets/time_spent.csv) and [time_spent.pdf](/assets/time_spent.pdf).
 
 Thanks in advance.
